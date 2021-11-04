@@ -1,7 +1,7 @@
 const { sign, verify } = require('jsonwebtoken')
 
 const createTokens = (user) => {
-    const accessToken = sign({ email: user.email }, process.env.JWT_SECRET, {
+    const accessToken = sign({ username: user.username }, process.env.JWT_SECRET, {
         expiresIn: 60*30*1000
     })
     return accessToken
