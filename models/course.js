@@ -5,6 +5,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Course extends Model {
     static associate(models) {
+      Course.belongsToMany(models.User, {
+        through: 'Course_Enrollment'
+      })
     }
   };
   Course.init({
