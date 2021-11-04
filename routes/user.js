@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { username, password } = req.body
 
-    if(!username || !password) return res.status(400).json('1 Invalid username or password')
+    if(!username || !password) return res.status(400).json('Invalid username or password')
 
     try {
         const user = await User.findOne({ where: { username: username } })
@@ -37,7 +37,7 @@ router.post('/login', async (req, res) => {
         const dbPassword = user.password
 
         const passwordMatch = (await bcrypt.compare(password, dbPassword)).valueOf()
-        if(!passwordMatch) return res.status(400).json('2 Invalid username or password')
+        if(!passwordMatch) return res.status(400).json('Invalid username or password')
         
         const accessToken = createTokens(user)
         res.cookie('access-token', accessToken, {
@@ -46,7 +46,7 @@ router.post('/login', async (req, res) => {
 
         return res.json('User logged in')
     } catch (err) {
-        return res.status(400).json('3 Invalid username or password')
+        return res.status(400).json('Invalid username or password')
     }
 })
 
