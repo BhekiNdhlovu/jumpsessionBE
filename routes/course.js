@@ -6,6 +6,18 @@ const Op = Sequelize.Op
 
 const { Course } = require('../models')
 
+// Get All Courses Route
+router.get('/get-all', async (req, res) => {
+    try {
+        const courses = await Course.findAll()
+        if(courses.length > 0) return res.json(courses)
+ 
+        return res.json('No courses available')
+    } catch (err) {
+        return res.status(400).json({ error: err})
+    }
+})
+
 // Search Course Route
 router.post('/search-course', async (req, res) => {
    try {
@@ -24,18 +36,6 @@ router.post('/search-course', async (req, res) => {
    } catch (err) {
        return res.status(400).json({ error: err})
    }
-})
-
-// Get All Courses Route
-router.get('/get-all', async (req, res) => {
-    try {
-        const courses = await Course.findAll()
-        if(courses.length > 0) return res.json(courses)
- 
-        return res.json('No courses available')
-    } catch (err) {
-        return res.status(400).json({ error: err})
-    }
 })
 
 // Find Course by Category
