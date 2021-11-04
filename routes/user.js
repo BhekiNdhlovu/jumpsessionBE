@@ -50,12 +50,12 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.delete('/logout', (req, res) => {
-    return res.json('Testing logout')
+router.delete('/logout', destroyToken, async (req, res) => {
+    return res.json('user logged out')
 })
 
-router.get('/profile', (req, res) => {
-    return res.json('Testing profile')
+router.get('/profile', validateToken, async (req, res) => {
+    return res.json('user logged in')
 })
 
 module.exports = router

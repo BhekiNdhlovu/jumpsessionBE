@@ -24,9 +24,8 @@ const validateToken = (req, res, next) => {
 
 const destroyToken = (req, res, next) => {
     const accessToken = req.cookies['access-token']
-    if(!accessToken) {
-        return res.json('user already logged out')
-    }
+
+    if(!accessToken) return res.json('user already logged out')
     
     try {
         res.clearCookie('access-token')
