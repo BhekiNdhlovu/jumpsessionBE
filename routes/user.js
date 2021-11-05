@@ -1,8 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
+const db = require('../models')
+const Sequelize = require('sequelize')
 
-const { User } = require('../models')
+const Op = Sequelize.Op
+
+const { Course, User } = require('../models')
 const { createTokens, validateToken, destroyToken } = require('../middleware/custom-auth')
 
 router.post('/register', async (req, res) => {
@@ -54,8 +58,35 @@ router.delete('/logout', destroyToken, async (req, res) => {
     return res.json('user logged out')
 })
 
-router.get('/profile', validateToken, async (req, res) => {
-    return res.json('user logged in')
+router.post('/profile', validateToken, async (req, res) => {
+    try {
+        const userCourses = await db.sequelize.query('SELECT * FROM course_enrollment WHERE "course_enrollment"."userId" = :userId', { 
+            replacements: { userId: req.body.userId},
+            type: db.sequelize.QueryTypes.SELECT
+        })
+
+        if(!userCourses || userCourses.length == 0) return res.json('User hasn\'t purchases a course')
+
+        if(userCourses) {
+            const idArr = []
+
+            userCourses.forEach(course => {
+                idArr.push(course.courseId)
+            })
+
+            const courses = await Course.findAll({ where: {
+                id: {
+                    [Op.in]: idArr
+                }
+            }})
+
+            return res.json(courses)
+        }
+
+        return res.status(400).json('Invalid request')
+    } catch (error) {
+        return res.status(500).json('Something went wrong')
+    }
 })
 
 module.exports = router
