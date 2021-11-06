@@ -18,6 +18,18 @@ router.get('/get-all', async (req, res) => {
     }
 })
 
+// Get All Categories Route
+router.get('/get-categories', async (req, res) => {
+    try {
+        const categories = await Course.findAll({ attributes: [Sequelize.fn('DISTINCT', Sequelize.col('category')), 'category']})
+        if(categories.length > 0) return res.json(categories)
+ 
+        return res.json('Categories not available')
+    } catch (err) {
+        return res.status(400).json({ error: err})
+    }
+})
+
 // Search Course Route
 router.post('/search-course', async (req, res) => {
    try {
